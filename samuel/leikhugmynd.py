@@ -27,6 +27,7 @@ class Player():
         self.color = (0, 255, 0)
         self.speed = 6
         self.isFalling = True
+        self.isLanded = True
         self.isMoving = False
         self.isJumping = False
         self.jumpTimer = 0
@@ -46,14 +47,13 @@ class Player():
             player.rect.x += self.speed
 
     def jump(self):
-        self.isJumping = True
-        if self.isJumping:
-            self.isFalling = False
-            for i in range(0, self.jumpHeight):
-                self.rect.y -= 1
         if self.jumpTimer == 0 and not self.isJumping:
             self.isJumping = True
-            self.jumpTimer = 60
+            self.isLanded = False
+            self.jumpTimer = self.jumpHeight
+
+        if self.isJumping:
+            self.isFalling = False
 
 
 class Object():
@@ -90,16 +90,18 @@ while True:#Keyrir leikinn
     elif player.isJumping:
         if player.jumpTimer > 0:
             player.jumpTimer -= 1
+            player.rect.y -= gravity+3
         else:
             player.isJumping = False
-
-        print(player.jumpTimer)
     player.draw()
 
     if player.rect.collidelist(platformColl) >= 0:
+        if player.isFalling == True and player.jumpTimer == 0:
+            player.isLanded = True
         player.isFalling = False
     else:
         player.isFalling = True
+
     if player.isMoving and direction:
         player.move(direction)
 
@@ -113,7 +115,7 @@ while True:#Keyrir leikinn
             sys.exit()
         elif event.type == KEYDOWN:
             if (event.key == K_SPACE):
-                if not player.isJumping and player.jumpTimer == 0:
+                if not player.isJumping and player.jumpTimer == 0 and player.isLanded:
                     player.jump()
             elif (event.key == K_LEFT):
                 player.isMoving = True
