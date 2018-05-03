@@ -28,6 +28,9 @@ class Player():
         self.speed = 6
         self.isFalling = True
         self.isMoving = False
+        self.isJumping = False
+        self.jumpTimer = 0
+        self.jumpHeight = 20
 
     def draw(self):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -41,6 +44,17 @@ class Player():
             player.rect.x -= self.speed
         elif dir == "Right":
             player.rect.x += self.speed
+
+    def jump(self):
+        self.isJumping = True
+        if self.isJumping:
+            self.isFalling = False
+            for i in range(0, self.jumpHeight):
+                self.rect.y -= 1
+        if self.jumpTimer == 0 and not self.isJumping:
+            self.isJumping = True
+            self.jumpTimer = 60
+
 
 class Object():
     def __init__(self, startPos, width, height):
@@ -59,9 +73,9 @@ gravity = 4
 direction = ""
 player = Player((screen.get_width()/2, 0), 10)
 
-ground = Object((-10,500),screen.get_width()+50, 5)
+Ground = Object((-10,500),screen.get_width()+50, 5)
 
-platforms = [ground, Object((100,400),200, 5), Object((200,300),200, 5), Object((300,250),200, 5)]
+platforms = [Ground, Object((100,400),200, 5), Object((200,300),200, 5), Object((300,250),200, 5)]
 platformColl = []
 for platform in platforms:
     platformColl.append(platform.rect)
@@ -71,8 +85,15 @@ for platform in platforms:
 while True:#Keyrir leikinn
     screen.fill(WHITE)
 
-    if player.isFalling:
+    if player.isFalling and not player.isJumping:
         player.rect.y += gravity
+    elif player.isJumping:
+        if player.jumpTimer > 0:
+            player.jumpTimer -= 1
+        else:
+            player.isJumping = False
+
+        print(player.jumpTimer)
     player.draw()
 
     if player.rect.collidelist(platformColl) >= 0:
@@ -92,7 +113,8 @@ while True:#Keyrir leikinn
             sys.exit()
         elif event.type == KEYDOWN:
             if (event.key == K_SPACE):
-                print("jump")
+                if not player.isJumping and player.jumpTimer == 0:
+                    player.jump()
             elif (event.key == K_LEFT):
                 player.isMoving = True
                 direction = "Left"
