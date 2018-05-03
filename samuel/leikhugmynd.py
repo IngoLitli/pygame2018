@@ -62,12 +62,10 @@ player = Player((screen.get_width()/2, 0), 10)
 platforms = [Object((-10,500),screen.get_width()+50, 5), Object((100,400),200, 5)]
 walls = [Object((50, 100), 5, 400), Object((800, 100), 5, 400)]
 platformColl = []
-wallColl = []
 for platform in platforms:
     platformColl.append(platform.rect)
 
 
-print(wallColl, player.rect.collidelist(wallColl))
 
 while True:#Keyrir leikinn
     screen.fill(WHITE)
