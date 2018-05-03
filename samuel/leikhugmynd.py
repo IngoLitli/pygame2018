@@ -65,7 +65,7 @@ class Object():
         self.end = (width, height)
         self.rect = pygame.Rect(startPos[0], startPos[1], width, height)
         self.width = 5
-        self.color = (max(0, min((randint(-20,200), 255))),max(0, min(((randint(0,250)), 255))),max(0, min(((randint(-20,200)), 255))))
+        self.color = (0,0 , min(((randint(0,250)), 255)))
 
     def draw(self):
         pygame.draw.rect(screen, self.color, (self.start, self.end))
