@@ -59,8 +59,9 @@ gravity = 4
 direction = ""
 player = Player((screen.get_width()/2, 0), 10)
 
-platforms = [Object((-10,500),screen.get_width()+50, 5), Object((100,400),200, 5)]
-walls = [Object((50, 100), 5, 400), Object((800, 100), 5, 400)]
+ground = Object((-10,500),screen.get_width()+50, 5)
+
+platforms = [ground, Object((100,400),200, 5), Object((200,300),200, 5), Object((300,250),200, 5)]
 platformColl = []
 for platform in platforms:
     platformColl.append(platform.rect)
