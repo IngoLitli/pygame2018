@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from random import *
+import math
 
 
 pygame.init()
@@ -64,9 +65,10 @@ class Object():
         self.end = (width, height)
         self.rect = pygame.Rect(startPos[0], startPos[1], width, height)
         self.width = 5
+        self.color = (255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)))
 
     def draw(self):
-        pygame.draw.rect(screen, (0,0,0), (self.start, self.end))
+        pygame.draw.rect(screen, self.color, (self.start, self.end))
 
 
 gravity = 4
@@ -75,11 +77,22 @@ player = Player((screen.get_width()/2, 0), 10)
 
 Ground = Object((-10,500),screen.get_width()+50, 5)
 
-platforms = [Ground, Object((100,400),200, 5), Object((200,300),200, 5), Object((300,250),200, 5)]
-platformColl = []
-for platform in platforms:
-    platformColl.append(platform.rect)
+def generatePlatforms():
+    global Ground
+    global platforms, platformColl
+    platforms = [Ground]
+    platformColl = []
 
+    for i in range(50,500, 50):
+        if randint(0,100) > 90:
+            platforms.append(Object((randint(0, screen.get_width()), i+randint(-50,50)), randint(50, 100), 5))
+        platforms.append(Object((randint(-50, screen.get_width() + 50), i), randint(200,250), 5))
+
+    for platform in platforms:
+        print(int(math.fabs(platform.rect.top-255)))
+        platformColl.append(platform.rect)
+
+generatePlatforms()
 
 
 while True:#Keyrir leikinn
